@@ -1,6 +1,6 @@
 provider "google" {
-  project = "sam-458313"
-  zone    = "us-central1-a"
+  project = "inspired-rock-462006-e2"
+  zone    = "us-central1-f"
 }
 
 
