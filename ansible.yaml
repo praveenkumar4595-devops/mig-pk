@@ -62,4 +62,4 @@
         executable: /bin/bash
 
     - name: Run custom Java container
-      shell: docker run -d -p 8089:8085 ganesh6498/harness-mig-java:latest
+      shell: docker run -d -p 8089:8085 praveenbudumuru/mig-pk-java:latest
