@@ -1,11 +1,26 @@
-FROM maven:3.9.6-eclipse-temurin-21 as builder
+# ---- Stage 1: Build the application ----
+FROM maven:3.9.3-eclipse-temurin-17 AS build
+
 WORKDIR /app
+
+# Copy only the pom.xml first and download dependencies (for better caching)
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Copy the rest of the application code
 COPY . .
+
+# Package the application
 RUN mvn clean package -DskipTests
 
-# Stage 2: Create runtime image
-FROM openjdk:21-jdk-slim
+
+# ---- Stage 2: Run the application ----
+FROM eclipse-temurin:17-jdk-alpine
+
 WORKDIR /app
-COPY --from=builder /app/target/demo-0.0.1-SNAPSHOT.jar app.jar
-EXPOSE 8085
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+
+# Copy the packaged jar from the build stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Run the jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
